@@ -1,0 +1,7 @@
+keyboard
+pynput
+requests
+cryptography
+pywin32
+pyinstaller
+pynput
