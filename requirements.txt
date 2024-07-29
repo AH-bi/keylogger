@@ -5,3 +5,5 @@ cryptography
 pywin32
 pyinstaller
 pynput
+opencv-python
+Pillow

