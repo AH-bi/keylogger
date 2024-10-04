@@ -1,2 +1,6 @@
 keyl-venv/
 keylogger.py
+advance_keylogger.spec
+dist/
+build/
+encrypt_decrypt/

